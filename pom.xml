@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.example</groupId>
-    <artifactId>excel_utis</artifactId>
+    <artifactId>excel_utils</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>excel_utis</name>
     <description>excel_utis</description>
@@ -44,7 +44,7 @@
             <artifactId>poi-ooxml</artifactId>
             <version>3.16</version>
         </dependency>
-        
+
     </dependencies>
 
     <build>

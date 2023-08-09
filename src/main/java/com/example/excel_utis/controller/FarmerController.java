@@ -32,8 +32,14 @@ public class FarmerController {
         Farmer farmer2 = new Farmer("unclesong","2","654321");
         farmerList.add(farmer1);
         farmerList.add(farmer2);
+        // 表头数据中文数据集合
+        List<String> headerList = new ArrayList<>();
+        headerList.add("养殖户姓名");
+        headerList.add("身份证类型");
+        headerList.add("身份证号");
+
         // 调用把实体类集合转换成 excel 表
-        ExportUtils.exportExcel("农户信息.xlsx", farmerList, Farmer.class, response);
+        ExportUtils.exportExcel("农户信息.xlsx", farmerList, Farmer.class, headerList, response);
     }
 
     @PostMapping("/import")

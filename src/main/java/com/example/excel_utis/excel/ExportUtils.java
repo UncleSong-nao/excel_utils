@@ -31,13 +31,14 @@ public class ExportUtils {
      * @param fileName 文件名, 不用带后缀
      * @param entityList 实体类对象集合
      * @param entityClass 实体类.class
+     * @param headerListInChinese 中文表头集合
      * @param response HttpServletResponse
      */
-    public static void exportExcel(String fileName, List<?> entityList, Class<?> entityClass, HttpServletResponse response) {
+    public static void exportExcel(String fileName, List<?> entityList, Class<?> entityClass, List<String> headerListInChinese, HttpServletResponse response) {
         try {
             // 创建 Excel 对象, 获取 sheet 对象来操作单表
-            XSSFWorkbook workBook = new XSSFWorkbook();
-            XSSFSheet sheet = workBook.createSheet();
+            Workbook workBook = new XSSFWorkbook();
+            Sheet sheet = workBook.createSheet();
 
             // 判空
             if (entityClass == null || CollectionUtils.isEmpty(entityList)) {
@@ -45,7 +46,7 @@ public class ExportUtils {
             }
 
             // 通过反射获取实体类的属性名
-            XSSFRow rowHeader = sheet.createRow(0);
+            Row rowHeader = sheet.createRow(0);
             Field[] declaredFields = entityClass.getDeclaredFields();
             List<String> headerList = new ArrayList<>(); // 表头集合(英文)
             if (declaredFields.length == 0) {
@@ -53,18 +54,20 @@ public class ExportUtils {
             }
             //  遍历实体类的属性名集合
             for (int i = 0; i < declaredFields.length; i++) {
-                XSSFCell cell = rowHeader.createCell(i, CellType.STRING);
+                Cell cell = rowHeader.createCell(i, CellType.STRING);
                 String headerName = declaredFields[i].getName();
-                cell.setCellValue(headerName); // 填写表头
+                // 强转一次 String
+                String nameInChinese = headerListInChinese.get(i);
+                cell.setCellValue(nameInChinese); // 填写中文表头
                 headerList.add(i, headerName); // 记录表头的下标和表头的名字
             }
 
             for (int o = 0; o < entityList.size(); o++) {
                 // 创建一行
-                XSSFRow rowData = sheet.createRow(o + 1);
+                Row rowData = sheet.createRow(o + 1);
                 for (int i = 0; i < headerList.size(); i++) {
                     // 填写这一行的数据
-                    XSSFCell cell = rowData.createCell(i);
+                    Cell cell = rowData.createCell(i);
                     Field nameField = entityClass.getDeclaredField(headerList.get(i)); // 通过反射使用属性名来写入数据
                     nameField.setAccessible(true);
                     String value = String.valueOf(nameField.get(entityList.get(o)));
